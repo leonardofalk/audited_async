@@ -21,7 +21,7 @@ module Audited::Auditor::AuditedInstanceMethods
     AuditedAsync::AuditAsyncJob.perform_later class_name: self.class.name,
                                               record_id: send(self.class.primary_key.to_sym),
                                               action: method,
-                                              audited_changes: audited_attributes,
+                                              audited_changes: serialized_audited_attributes.to_json,
                                               comment: audit_comment
   end
 end
