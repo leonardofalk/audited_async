@@ -1,0 +1,3 @@
+inherit_gem:
+  wonder-ruby-style:
+    - presets/0.52.1.yml
