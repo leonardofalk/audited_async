@@ -2,13 +2,15 @@
 
 AuditedAsync is an addon for audited gem which allows to create audits asynchronously using ActiveJob.
 
+It's currently under initial development and I strongly recommend you do not use it in production until it reaches a stable version.
+
 ## Installation
 
 Add this line to your application's Gemfile, right after audited gem:
 
 ```ruby
 gem 'audited'
-gem 'audited_async'
+gem 'audited_async', '~> 0.1.2'
 ```
 
 And then execute:
@@ -28,6 +30,12 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/leonardofalk/audited_async. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+
+## To Do
+
+- [ ] Avoid overriding audited methods.
+- [ ] Prepare the Gem to be configurable.
+- [ ] Elaborate test cases.
 
 ## License
 
