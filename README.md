@@ -1,5 +1,7 @@
 # AuditedAsync
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/2d4899ab63fcea8a9144/maintainability)](https://codeclimate.com/github/leonardofalk/audited_async/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/2d4899ab63fcea8a9144/test_coverage)](https://codeclimate.com/github/leonardofalk/audited_async/test_coverage)
+
 AuditedAsync is an addon for audited gem which allows to create audits asynchronously using ActiveJob.
 
 It's currently under initial development and I strongly recommend you do not use it in production until it reaches a stable version.
@@ -15,7 +17,9 @@ gem 'audited_async', '~> 0.1.2'
 
 And then execute:
 
-    $ bundle
+```
+$ bundle
+```
 
 ## Usage
 
@@ -29,7 +33,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/leonardofalk/audited_async. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at <https://github.com/leonardofalk/audited_async>. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## To Do
 
