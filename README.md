@@ -2,9 +2,9 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/2d4899ab63fcea8a9144/maintainability)](https://codeclimate.com/github/leonardofalk/audited_async/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/2d4899ab63fcea8a9144/test_coverage)](https://codeclimate.com/github/leonardofalk/audited_async/test_coverage)
 
-AuditedAsync is an addon for audited gem which allows to create audits asynchronously using ActiveJob.
+AuditedAsync is an extension for the [audited](https://github.com/collectiveidea/audited) gem which allows to create audits asynchronously using ActiveJob.
 
-It's currently under initial development and I strongly recommend you do not use it in production until it reaches a stable version.
+It works by safely injecting the `async` option into audited model option using functional programming. If enabled, it'll move audit creation logic into an ActiveJob instance, then it's sent to the queue to be executed later.
 
 ## Installation
 
@@ -27,7 +27,18 @@ class Post < ApplicationRecord
 end
 ```
 
-All done! Although you can configure some stuff, check below.
+Depending on your active job adapter, you may need to make the queue name visible to the adapter.
+
+### Sidekiq
+
+```yaml
+# config/sidekiq.yml
+...
+:queues:
+  - [audits, 1] # add this line
+```
+
+All done! Although you can optionally configure some more stuff, check below.
 
 #### Enabling it programmatically
 
@@ -35,7 +46,7 @@ All done! Although you can configure some stuff, check below.
 # config/initializers/audited_async.rb
 
 AuditedAsync.configure do |config|
-  config.enabled  = Rails.env.production?
+  config.enabled = Rails.env.production?
 end
 ```
 
@@ -79,11 +90,11 @@ class JobityJob < ApplicationJob
 end
 ```
 
-To see how the default job performs, [look here](./lib/audited_async/audit_async_job).
+To see how the default job performs, [look here](./lib/audited_async/audit_async_job.rb).
 
-## How It Works
+## Sample App
 
-AuditedAsync safely inject the `async` option into audited model option using functional programming. If enabled, it'll move audit creation logic into an ActiveJob instance, then it's sent to the queue to be executed later.
+Samples on [this repo](https://github.com/leonardofalk/audited_async_sample.git).
 
 ## Development
 
