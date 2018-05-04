@@ -12,18 +12,78 @@ Add this line to your application's Gemfile, right after audited gem:
 
 ```ruby
 gem 'audited'
-gem 'audited_async', '~> 0.1.2'
+gem 'audited_async'
 ```
 
 And then execute:
 
-```
-$ bundle
-```
+    $ bundle
 
 ## Usage
 
-All done!
+```ruby
+class Post < ApplicationRecord
+  audited async: true
+end
+```
+
+All done! Although you can configure some stuff, check below.
+
+#### Enabling it programmatically
+
+```ruby
+# config/initializers/audited_async.rb
+
+AuditedAsync.configure do |config|
+  config.enabled  = Rails.env.production?
+end
+```
+
+#### Changing Job execution
+
+```ruby
+# config/initializers/audited_async.rb
+
+AuditedAsync.configure do |config|
+  config.job_name  = 'JobityJob'
+end
+```
+
+Create your own job:
+
+```ruby
+class JobityJob < ApplicationJob
+  queue_as :audits
+
+  def perform(audit_info)
+    # audit_info = {
+    #   class_name:      'Post',
+    #   record_id:       2,
+    #   audited_changes: "{\"json_stringified_changes\": \"with_values\"}",
+    #   action:          one of %w[create update destroy],
+    #   comment:         there will be some string here if audited comments are enabled,
+    # }
+
+    # ...
+    # run your logic
+    # ...
+
+    # job must have this line at the end
+    class_name.constantize.send(:write_audit, attributes)
+    # attributes = {
+    #   audited_changes: {hash_changes: :with_values},
+    #   action:          one of %w[create update destroy],
+    #   comment:         comment, if enabled
+    # }
+  end
+end
+```
+
+To see how the default job performs, [look here](./lib/audited_async/audit_async_job).
+
+## How It Works
+
+AuditedAsync safely inject the `async` option into audited model option using functional programming. If enabled, it'll move audit creation logic into an ActiveJob instance, then it's sent to the queue to be executed later.
 
 ## Development
 
@@ -37,9 +97,7 @@ Bug reports and pull requests are welcome on GitHub at <https://github.com/leona
 
 ## To Do
 
-- [ ] Avoid overriding audited methods.
-- [ ] Prepare the Gem to be configurable.
-- [ ] Elaborate test cases.
+-   [ ] Elaborate more test cases.
 
 ## License
 
