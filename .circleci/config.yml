@@ -1,0 +1,40 @@
+version:               2
+jobs:
+  build:
+    docker:
+       - image:        circleci/ruby:2.5.1-node-browsers
+    working_directory: ~/audited_async
+    parallelism:       4
+    branches:
+      only:
+        - master
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - audited_async-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+          - audited_async-master-{{ checksum "Gemfile.lock" }}
+
+      - run:
+          name:        Bundle Install
+          command:     |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key:         audited_async-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+
+      - run:
+          name:        Test Suite
+          command:     |
+            mkdir /tmp/test-results
+
+            bundle exec rspec --format progress \
+                            --out /tmp/test-results/rspec.xml \
+                            --format progress
+
+      - run:
+          name:        Test Coverage Report
+          command:     bundle exec codeclimate-test-reporter

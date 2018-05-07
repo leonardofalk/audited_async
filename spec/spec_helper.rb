@@ -4,7 +4,7 @@ require 'simplecov'
 SimpleCov.start 'rails' do
   add_filter 'lib/audited_async/version'
 end
-SimpleCov.minimum_coverage 100
+SimpleCov.minimum_coverage ENV.fetch('COVERAGE_THRESHOLD', '100').to_i
 SimpleCov.at_exit do
   SimpleCov.result.format!
 end
