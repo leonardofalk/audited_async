@@ -61,7 +61,7 @@ module Audited::Auditor::AuditedInstanceMethods
   end
 
   def perform_async_audit(method, changes = nil)
-    AuditedAsync.config.job.perform_later class_name: self.class.name,
+    AuditedAsync.config.job.set(wait: 1.second).perform_later class_name: self.class.name,
                                           record_id: send(self.class.primary_key.to_sym),
                                           action: method,
                                           audited_changes: (changes || audited_attributes).to_json,
