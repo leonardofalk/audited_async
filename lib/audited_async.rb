@@ -6,13 +6,17 @@ require 'audited_async/audit_async_job'
 module AuditedAsync
   class << self
     def configure
-      @configurator ||= AuditedAsync::Configurator.new
-
-      yield @configurator
+      yield configurator
     end
 
     def config
-      @configurator
+      configurator
+    end
+
+    private
+
+    def configurator
+      @configurator ||= AuditedAsync::Configurator.new
     end
   end
 end
