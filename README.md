@@ -58,6 +58,7 @@ end
 
 AuditedAsync.configure do |config|
   config.job_name  = 'JobityJob'
+  config.job_options = { wait: 1.second }
 end
 ```
 
@@ -91,17 +92,24 @@ class JobityJob < ApplicationJob
 end
 ```
 
+### Limitations
+
+ - Audits for destroying an object are subject to soft delete, hard deleted records are ignored, so if you are using some library like [paranoia](https://github.com/rubysherpas/paranoia) or [discard](https://github.com/jhawthorn/discard), destroying an object will still create audits, regardless model scoping.
+ - Attributes passed down to job are limited to serializable attributes, you can find a [list here](https://edgeguides.rubyonrails.org/active_job_basics.html#supported-types-for-arguments), other than that would throw an error.
+
 To see how the default job performs, [look here](./lib/audited_async/audit_async_job.rb).
 
 ## Sample App
 
-Samples on [this repo](https://github.com/leonardofalk/audited_async_sample.git).
+https://github.com/leonardofalk/audited_async_sample.git
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Check out the repository, execute `bundle install` and you're good to go.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+## Testing
+
+There are some unit tests now but integration tests are missing. You can ran the suite by executing `rspec`.
 
 ## Contributing
 
@@ -109,7 +117,7 @@ Bug reports and pull requests are welcome on GitHub at <https://github.com/leona
 
 ## To Do
 
--   [ ] Elaborate more test cases.
+-   [ ] Elaborate integration test cases.
 
 ## License
 

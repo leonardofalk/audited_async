@@ -5,6 +5,18 @@ require 'audited_async/audit_async_job'
 
 module AuditedAsync
   class << self
+    def logger
+      @logger ||= begin
+        if defined?(::Rails)
+          ::Rails.logger
+        else
+          require 'logger'
+
+          Logger.new
+        end
+      end
+    end
+
     def configure
       yield configurator
     end
@@ -65,10 +77,13 @@ module Audited::Auditor::AuditedInstanceMethods
   end
 
   def perform_async_audit(method, changes = nil)
-    AuditedAsync.config.job.set(wait: 1.second).perform_later class_name: self.class.name,
-                                          record_id: send(self.class.primary_key.to_sym),
-                                          action: method,
-                                          audited_changes: (changes || audited_attributes).to_json,
-                                          comment: audit_comment
+    AuditedAsync.config
+                .job
+                .set(AuditedAsync.config.job_options)
+                .perform_later class_name: self.class.name,
+                               record_id: send(self.class.primary_key.to_sym),
+                               action: method,
+                               audited_changes: (changes || audited_attributes).to_json,
+                               comment: audit_comment
   end
 end
