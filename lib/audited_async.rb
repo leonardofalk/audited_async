@@ -49,8 +49,8 @@ module Audited::Auditor::AuditedInstanceMethods
   define_method :audit_update do
     return _audit_update.bind(self).() unless audited_async_enabled?
 
-    unless (changes = audited_changes).empty? && audit_comment.blank?
-      perform_async_audit 'update'
+    unless (changes = audited_changes).empty? && (audit_comment.blank? || audited_options[:update_with_comment_only] == false)
+      perform_async_audit('update', changes)
     end
   end
 
@@ -60,11 +60,11 @@ module Audited::Auditor::AuditedInstanceMethods
     perform_async_audit 'destroy' unless new_record?
   end
 
-  def perform_async_audit(method)
-    AuditedAsync.config.job.perform_later class_name: self.class.name,
+  def perform_async_audit(method, changes = nil)
+    AuditedAsync.config.job.set(wait: 1.second).perform_later class_name: self.class.name,
                                           record_id: send(self.class.primary_key.to_sym),
                                           action: method,
-                                          audited_changes: audited_attributes.to_json,
+                                          audited_changes: (changes || audited_attributes).to_json,
                                           comment: audit_comment
   end
 end
