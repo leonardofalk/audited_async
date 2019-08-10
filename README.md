@@ -1,6 +1,5 @@
 # AuditedAsync
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/2d4899ab63fcea8a9144/maintainability)](https://codeclimate.com/github/leonardofalk/audited_async/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/2d4899ab63fcea8a9144/test_coverage)](https://codeclimate.com/github/leonardofalk/audited_async/test_coverage)
 [![CircleCI](https://circleci.com/gh/leonardofalk/audited_async.svg?style=svg)](https://circleci.com/gh/leonardofalk/audited_async)
 
 AuditedAsync is an extension for the [audited](https://github.com/collectiveidea/audited) gem which allows to create audits asynchronously using ActiveJob.
