@@ -2,9 +2,9 @@
 
 [![CircleCI](https://circleci.com/gh/leonardofalk/audited_async.svg?style=svg)](https://circleci.com/gh/leonardofalk/audited_async)
 
-AuditedAsync is an extension for the [audited](https://github.com/collectiveidea/audited) gem which allows to create audits asynchronously using ActiveJob.
+AuditedAsync is a plugin for the [audited](https://github.com/collectiveidea/audited) gem which allows to create audits asynchronously using ActiveJob.
 
-It works by safely injecting the `async` option into audited model option using functional programming. If enabled, it'll move audit creation logic into an ActiveJob instance, then it's sent to the queue to be executed later.
+It works by injecting the `async` option into audited model option using functional programming. If enabled, it'll move audit creation logic into an ActiveJob instance, then it's sent to the queue to be executed later.
 
 ## Installation
 
@@ -104,11 +104,11 @@ https://github.com/leonardofalk/audited_async_sample.git
 
 ## Development
 
-Check out the repository, execute `bundle install` and you're good to go.
+Checkout the repository, execute `bundle install` and you're good to go.
 
 ## Testing
 
-There are some unit tests now but integration tests are missing. You can ran the suite by executing `rspec`.
+There are some unit tests now but integration tests are missing. You can run the suite by executing `rspec`.
 
 ## Contributing
 
