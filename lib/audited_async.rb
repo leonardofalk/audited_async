@@ -41,7 +41,7 @@ module Audited::Auditor::ClassMethods
   define_method :audited do |options = {}|
     @audited_async_enabled = options.fetch(:async, false) && AuditedAsync.config.enabled?
 
-    _audited.bind(self).(options)
+    _audited.bind(self).call(options)
   end
 
   alias audited_async_enabled? audited_async_enabled
@@ -53,17 +53,17 @@ module Audited::Auditor::AuditedInstanceMethods
   _audit_destroy = instance_method :audit_destroy
 
   def audited_async_enabled?
-    self.class.audited_async_enabled?
+    self.class.auditing_enabled && self.class.audited_async_enabled?
   end
 
   define_method :audit_create do
-    return _audit_create.bind(self).() unless audited_async_enabled?
+    return _audit_create.bind(self).call unless audited_async_enabled?
 
     perform_async_audit 'create'
   end
 
   define_method :audit_update do
-    return _audit_update.bind(self).() unless audited_async_enabled?
+    return _audit_update.bind(self).call unless audited_async_enabled?
 
     unless (changes = audited_changes).empty? && (audit_comment.blank? || audited_options[:update_with_comment_only] == false)
       perform_async_audit('update', changes)
@@ -71,7 +71,7 @@ module Audited::Auditor::AuditedInstanceMethods
   end
 
   define_method :audit_destroy do
-    return _audit_destroy.bind(self).() unless audited_async_enabled?
+    return _audit_destroy.bind(self).call unless audited_async_enabled?
 
     perform_async_audit 'destroy' unless new_record?
   end
