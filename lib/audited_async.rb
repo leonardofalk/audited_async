@@ -34,14 +34,9 @@ module AuditedAsync
 end
 
 module Audited::Auditor::ClassMethods
-  attr_reader :audited_async_enabled
-
-  _audited = instance_method :audited
-
-  define_method :audited do |options = {}|
-    @audited_async_enabled = options.fetch(:async, false) && AuditedAsync.config.enabled?
-
-    _audited.bind(self).call(options)
+  def audited_async_enabled
+    return @audited_async_enabled if defined?(@audited_async_enabled)
+    @audited_async_enabled ||= Note.audited_options.fetch(:async, false) && AuditedAsync.config.enabled?
   end
 
   alias audited_async_enabled? audited_async_enabled
@@ -79,8 +74,7 @@ module Audited::Auditor::AuditedInstanceMethods
   def perform_async_audit(method, changes = nil)
     AuditedAsync.config
                 .job
-                .set(AuditedAsync.config.job_options)
-                .perform_later class_name: self.class.name,
+                .perform_async class_name: self.class.name,
                                record_id: send(self.class.primary_key.to_sym),
                                action: method,
                                audited_changes: (changes || audited_attributes).to_json,
